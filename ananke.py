@@ -1,7 +1,6 @@
 from typing import Set, Tuple, List, Union, Dict
 from itertools import combinations
 
-import skbio
 import pandas as pd
 import numpy as np
 
@@ -437,6 +436,7 @@ class Ananke(object):
                     self._dm = params['metric']
                 else:
                     self._dm = 'unknown' #Should we scrape further up? This is typical of pipeline distance matrices
+        import skbio
         dm_df = dm.view(skbio.DistanceMatrix).to_data_frame()
         self._objs = set(dm_df.index.tolist())
         self._src = "distance_matrix"
@@ -466,6 +466,7 @@ class Ananke(object):
     
     def _preprocess_tree(self, tree):
         from qiime2 import Artifact
+        import skbio
         tree = Artifact.load(tree).view(skbio.TreeNode)
         feature_names = [x.name for x in tree.tips()]
         self._dm = "phylogenetic"
