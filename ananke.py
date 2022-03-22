@@ -2,12 +2,10 @@ from typing import Set, Tuple, List, Union, Dict
 from itertools import combinations
 
 import skbio
-import biom
 import pandas as pd
 import numpy as np
 
-from qiime2 import Artifact
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from probables import ExpandingBloomFilter
 
 import yaml
@@ -392,6 +390,7 @@ class Ananke(object):
     def _preprocess_biom_table(self, biom_table) -> None:
         # Sets the object list from the biom_table object
         # and stores the table as an attribute
+        from qiime2 import Artifact
         biom_table = Artifact.load(biom_table).view(pd.DataFrame)
         if self.object_type == "features":
             objects = biom_table.index.tolist()
@@ -413,7 +412,7 @@ class Ananke(object):
             for d in yaml_obj['action']['parameters']:
                 params.update(d)
             return params
-
+        from qiime2 import Artifact
         dm = Artifact.load(distance_matrix)
         
         # Scrape YAML files to attempt to infer/find the distance metric
@@ -466,6 +465,7 @@ class Ananke(object):
                 self._blms[bloom_cutoff]._add_alt(hashes)
     
     def _preprocess_tree(self, tree):
+        from qiime2 import Artifact
         tree = Artifact.load(tree).view(skbio.TreeNode)
         feature_names = [x.name for x in tree.tips()]
         self._dm = "phylogenetic"
