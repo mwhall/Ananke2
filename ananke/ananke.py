@@ -4,7 +4,7 @@ from itertools import combinations
 import pandas as pd
 import numpy as np
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from probables import ExpandingBloomFilter
 
 import yaml
@@ -18,8 +18,6 @@ yaml.add_constructor('!no-provenance', scalar_constructor)
 yaml.add_constructor('!color', scalar_constructor)                              
 yaml.add_constructor('!cite', scalar_constructor)                               
 yaml.add_constructor('!metadata', scalar_constructor)
-
-
 
 class AnankeBloomFilter(object):
     """This class is a wrapper for pyprobables ExpandingBloomFilter
@@ -36,14 +34,11 @@ class AnankeBloomFilter(object):
         bloom (ExpandingBloomFilter, optional): An ExpandingBloomFilter, supplied if loading from file. If None (default), will make a new, empty ExpandingBloomFilter.
     """
 
-    
-#    Attributes:
-#        threshold (float): A range of distance thresholds to sample the pairwise relationships, in ascending order
-#        false_positive_rate (float): The false positive rate for pairs in the worst case; determines when a bloom filter is full and is expanded
-#        bloom (ExpandingBloomFilter): A list of bloom filters, the same length and order as self.thresholds, representing the object neighbourhoods at those thresholds
-#        manager (AnankeManager): The AnankeManager that manages this bloom filter
+    __slots__ = ["_fpr",
+                 "_blm",
+                 "_thrshld",
+                 "_mgr"]
 
-    __slots__ = ["_fpr","_blm","_thrshld","_mgr"]
     def __init__(self, 
                  threshold: float, 
                  manager,#: AnankeManager, #Type hint here causes circular reference
@@ -191,23 +186,6 @@ class Ananke(object):
             relationships are being stored
         biom_table (:obj: biom.Table): A BIOM formatted table
     """
-#    Attributes:
-#        distance_measure (str): The distance measure that is used 
-#            to compute the pairs
-#        thresholds (:obj:`list` of :obj:`float`): A range of
-#            distance thresholds to sample the pairwise
-#            relationships, in ascending order
-#        false_positive_rate (float): The false positive rate for
-#            pairs in the worst case; determines when a bloom 
-#            filter is full and is expanded
-#        objects (:obj:`set` of :obj:`str`): A set of the initial
-#            samples or features whose pairwise relationships are 
-#            being stored
-#        blooms (:obj:`list` of :obj:`ExpandingBloomFilter`): A list
-#            of bloom filters, the same length and order as 
-#            self.thresholds, representing the object neighbourhoods
-#            at those thresholds
-        
     
     DEFAULT_ESTIMATED_ELEMENTS = 1e4 #By default make room to store 10,000 pairs
     __slots__ = ["_dm", "_fpr", "_objs", "_blms", "_pair_dist",
